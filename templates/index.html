@@ -1,1 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Treats Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f4f4f4;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sweet Treats Management System</h1>
 
+        <h2>Specialty Treats</h2>
+        <ul id="treats-list">
+            {% for treat in treats %}
+            <li>{{ treat[1] }} - {{ treat[2] }}</li>
+            {% endfor %}
+        </ul>
+        <form id="add-treat-form">
+            <input type="text" id="treat-name" placeholder="Treat Name" required>
+            <input type="text" id="treat-availability" placeholder="Availability" required>
+            <input type="submit" value="Add Treat">
+        </form>
+
+        <h2>Stock Inventory</h2>
+        <ul id="stock-list">
+            {% for item in stock %}
+            <li>{{ item[1] }} - Quantity: {{ item[2] }}</li>
+            {% endfor %}
+        </ul>
+        <form id="add-stock-form">
+            <input type="text" id="item-name" placeholder="Item Name" required>
+            <input type="number" id="item-amount" placeholder="Amount" required>
+            <input type="submit" value="Add Stock Item">
+        </form>
+
+        <h2>Customer Requests</h2>
+        <ul id="requests-list">
+            {% for request in requests %}
+            <li>{{ request[1] }} requested by {{ request[2] }} - Dietary Restrictions: {{ request[3] or 'None' }}</li>
+            {% endfor %}
+        </ul>
+        <form id="add-request-form">
+            <input type="text" id="request-treat" placeholder="Requested Treat" required>
+            <input type="text" id="requester-name" placeholder="Requester Name" required>
+            <input type="text" id="dietary-restrictions" placeholder="Dietary Restrictions">
+            <input type="submit" value="Log Request">
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('add-treat-form').addEventListener('submit', function(e) {
+	    e.preventDefault();
+	    fetch('/treats', {
+		method: 'POST',
+		headers: {
+		    'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+		    treat_name: document.getElementById('treat-name').value,
+		    availability: document.getElementById('treat-availability').value
+		}),
+	    }).then(response => response.json())
+	      .then(data => {
+		  console.log('Success:', data);
+		  location.reload();
+	      })
+	      .catch((error) => {
+		  console.error('Error:', error);
+	      });
+	});
+
+	document.getElementById('add-stock-form').addEventListener('submit', function(e) {
+	    e.preventDefault();
+	    fetch('/stock', {
+		method: 'POST',
+		headers: {
+		    'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+		    item_name: document.getElementById('item-name').value,
+		    amount: parseInt(document.getElementById('item-amount').value)
+		}),
+	    }).then(response => response.json())
+	      .then(data => {
+		  console.log('Success:', data);
+		  location.reload();
+	      })
+	      .catch((error) => {
+		  console.error('Error:', error);
+	      });
+	});
+
+	document.getElementById('add-request-form').addEventListener('submit', function(e) {
+	    e.preventDefault();
+	    fetch('/requests', {
+		method: 'POST',
+		headers: {
+		    'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+		    treat_name: document.getElementById('request-treat').value,
+		    requester: document.getElementById('requester-name').value,
+		    dietary_restrictions: document.getElementById('dietary-restrictions').value
+		}),
+	    }).then(response => response.json())
+	      .then(data => {
+		  console.log('Success:', data);
+		  location.reload();
+	      })
+	      .catch((error) => {
+		  console.error('Error:', error);
+	      });
+	});
+    </script>
+</body>
+</html>
