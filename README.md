@@ -23,6 +23,7 @@ sweet_treats/
 ├── templates/              # Folder containing HTML templates
 │   └── index.html          # Main webpage template
 └── README.md               # Project documentation
+```
 
 ## Installation Steps
 1. Clone the repository:
